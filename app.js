@@ -20,7 +20,11 @@ client.connect((err) => {
     insertDocuments(db, function() {
         findDocuments(db, function() {
             client.close();    
-        });    
+        });
+
+        findDocumentsQueryFilter(db, function() {
+            client.close();
+        })
     });
 })
 
@@ -52,6 +56,19 @@ const findDocuments = function(db, callback) {
             console.log("Found the following records");
             console.log(docs);            
         }
+        callback(docs);
+    });
+}
+
+const findDocumentsQueryFilter = function(db, callback) {
+    // Get the documents collection
+    const collection = db.collection('documents');
+    // Find some documents
+    // Only the documents which match 'a': 3 should be returned
+    collection.find({'a': 3}).toArray((err, docs) => {
+        assert.strictEqual(err, null);
+        console.log("Found the following recors");
+        console.log(docs);
         callback(docs);
     });
 }
