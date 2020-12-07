@@ -18,7 +18,9 @@ client.connect((err) => {
     const db = client.db(dbName);
     
     insertDocuments(db, function() {
-        client.close();
+        findDocuments(db, function() {
+            client.close();    
+        });    
     });
 })
 
@@ -34,5 +36,22 @@ const insertDocuments = function(db, callback) {
         assert.equal(3, result.ops.length);
         console.log("Inserted 3 documents into he collection");
         callback(result);
+    });
+}
+
+const findDocuments = function(db, callback) {
+    // Get the documents collection
+    const collection = db.collection('documents');    
+    // The find() method selects documents in a collection or viw and returns a cursor
+    // to the selected documents.
+    // The toArray() method returns an array that contains all the documents
+    // from a cursor.
+    collection.find({}).toArray(function(err, docs) {
+        assert.strictEqual(err, null);
+        if (docs.length > 0) {
+            console.log("Found the following records");
+            console.log(docs);            
+        }
+        callback(docs);
     });
 }
