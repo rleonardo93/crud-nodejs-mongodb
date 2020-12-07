@@ -22,6 +22,7 @@ client.connect((err) => {
         findDocumentsQueryFilter(db, () => client.close());
         updateDocument(db, () => client.close());
         removeDocument(db, ()=> client.close());
+        indexCollection(db, () => client.close());
     });
 })
 
@@ -93,4 +94,15 @@ const removeDocument = (db, callback) => {
         console.log("Removed the document with the field a equal to 3");
         callback(result);
     });
+}
+
+const indexCollection = (db, callback) => {
+    db.collection('documents').createIndex(
+        {"a": 1},
+        null,
+        (err, results) => { 
+            console.log(results);
+            callback();
+        }
+    );
 }
